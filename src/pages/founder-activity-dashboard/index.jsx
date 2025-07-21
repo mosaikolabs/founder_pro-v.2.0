@@ -1,206 +1,283 @@
-import React, { useState, useMemo } from 'react';
-        import { Helmet } from 'react-helmet';
-        import Button from '../../components/ui/Button';
-        import ProgressHeader from './components/ProgressHeader';
-        import KPIWidgets from './components/KPIWidgets';
-        import TabNavigation from './components/TabNavigation';
-        import RoadmapTimeline from './components/RoadmapTimeline';
-        import ActivityMatrix from './components/ActivityMatrix';
-        import MilestoneTracker from './components/MilestoneTracker';
-        import ActivityDetailModal from './components/ActivityDetailModal';
+import React, { useState } from 'react';
+import AppLayout from '../../components/layout/AppLayout';
+import Button from '../../components/ui/Button';
+import Icon from '../../components/AppIcon';
 
-        const FounderActivityDashboard = () => {
-          const [activeTab, setActiveTab] = useState('roadmap');
-          const [selectedActivity, setSelectedActivity] = useState(null);
-          const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+const FounderActivityDashboard = () => {
+  const [activeTab, setActiveTab] = useState('overview');
 
-          // Mock data for founder activities
-          const founderActivities = useMemo(() => ({
-            phases: [
-              {
-                id: 'ideation',
-                name: 'Ideation',
-                startDate: '2025-01-01',
-                endDate: '2025-02-28',
-                status: 'completed',
-                activities: [
-                  { id: 'market-research', name: 'Market Research', status: 'completed', priority: 'high', dueDate: '2025-01-15', area: 'market' },
-                  { id: 'problem-validation', name: 'Problem Validation', status: 'completed', priority: 'high', dueDate: '2025-01-30', area: 'product' },
-                  { id: 'competitor-analysis', name: 'Competitor Analysis', status: 'completed', priority: 'medium', dueDate: '2025-02-10', area: 'market' },
-                  { id: 'business-model', name: 'Business Model Canvas', status: 'completed', priority: 'high', dueDate: '2025-02-20', area: 'business' }
-                ]
-              },
-              {
-                id: 'validation',
-                name: 'Validation',
-                startDate: '2025-03-01',
-                endDate: '2025-04-30',
-                status: 'in-progress',
-                activities: [
-                  { id: 'mvp-development', name: 'MVP Development', status: 'completed', priority: 'high', dueDate: '2025-03-31', area: 'product' },
-                  { id: 'user-testing', name: 'User Testing', status: 'in-progress', priority: 'high', dueDate: '2025-04-15', area: 'product' },
-                  { id: 'feedback-collection', name: 'Feedback Collection', status: 'in-progress', priority: 'medium', dueDate: '2025-04-20', area: 'market' },
-                  { id: 'iterate-product', name: 'Product Iteration', status: 'pending', priority: 'high', dueDate: '2025-04-30', area: 'product' }
-                ]
-              },
-              {
-                id: 'launch',
-                name: 'Launch',
-                startDate: '2025-05-01',
-                endDate: '2025-06-30',
-                status: 'pending',
-                activities: [
-                  { id: 'launch-strategy', name: 'Launch Strategy', status: 'pending', priority: 'high', dueDate: '2025-05-15', area: 'marketing' },
-                  { id: 'marketing-campaign', name: 'Marketing Campaign', status: 'pending', priority: 'high', dueDate: '2025-05-31', area: 'marketing' },
-                  { id: 'sales-funnel', name: 'Sales Funnel Setup', status: 'pending', priority: 'medium', dueDate: '2025-06-10', area: 'sales' },
-                  { id: 'customer-support', name: 'Customer Support Setup', status: 'pending', priority: 'medium', dueDate: '2025-06-20', area: 'operations' }
-                ]
-              },
-              {
-                id: 'growth',
-                name: 'Growth',
-                startDate: '2025-07-01',
-                endDate: '2025-09-30',
-                status: 'pending',
-                activities: [
-                  { id: 'user-acquisition', name: 'User Acquisition', status: 'pending', priority: 'high', dueDate: '2025-07-31', area: 'marketing' },
-                  { id: 'retention-strategy', name: 'Retention Strategy', status: 'pending', priority: 'high', dueDate: '2025-08-15', area: 'product' },
-                  { id: 'revenue-optimization', name: 'Revenue Optimization', status: 'pending', priority: 'high', dueDate: '2025-08-31', area: 'business' },
-                  { id: 'team-expansion', name: 'Team Expansion', status: 'pending', priority: 'medium', dueDate: '2025-09-15', area: 'operations' }
-                ]
-              },
-              {
-                id: 'scaling',
-                name: 'Scaling',
-                startDate: '2025-10-01',
-                endDate: '2025-12-31',
-                status: 'pending',
-                activities: [
-                  { id: 'funding-round', name: 'Funding Round', status: 'pending', priority: 'high', dueDate: '2025-10-31', area: 'business' },
-                  { id: 'international-expansion', name: 'International Expansion', status: 'pending', priority: 'medium', dueDate: '2025-11-30', area: 'business' },
-                  { id: 'process-automation', name: 'Process Automation', status: 'pending', priority: 'medium', dueDate: '2025-12-15', area: 'operations' },
-                  { id: 'strategic-partnerships', name: 'Strategic Partnerships', status: 'pending', priority: 'high', dueDate: '2025-12-31', area: 'business' }
-                ]
-              }
-            ],
-            businessAreas: ['market', 'product', 'business', 'marketing', 'sales', 'operations'],
-            milestones: [
-              { id: 'first-customer', name: 'First Paying Customer', targetDate: '2025-04-15', status: 'pending', progress: 75 },
-              { id: 'product-launch', name: 'Product Launch', targetDate: '2025-06-01', status: 'pending', progress: 45 },
-              { id: 'break-even', name: 'Break Even Point', targetDate: '2025-08-31', status: 'pending', progress: 20 },
-              { id: 'series-a', name: 'Series A Funding', targetDate: '2025-10-31', status: 'pending', progress: 10 }
-            ]
-          }), []);
+  const tabs = [
+    { id: 'overview', label: 'Activity Overview', count: 6 },
+    { id: 'timeline', label: 'Roadmap Timeline', count: 5 },
+    { id: 'tracker', label: 'Milestone Tracker', count: 8 }
+  ];
 
-          // Calculate overall progress
-          const overallProgress = useMemo(() => {
-            const allActivities = founderActivities.phases.flatMap(phase => phase.activities);
-            const completedCount = allActivities.filter(activity => activity.status === 'completed').length;
-            return Math.round((completedCount / allActivities.length) * 100);
-          }, [founderActivities]);
+  const activities = [
+    {
+      id: 'ACT-001',
+      title: 'Market Research',
+      phase: 'Ideation',
+      status: 'completed',
+      progress: 100,
+      dueDate: '2025-01-15'
+    },
+    {
+      id: 'ACT-002',
+      title: 'MVP Development',
+      phase: 'Validation',
+      status: 'in-progress',
+      progress: 75,
+      dueDate: '2025-03-31'
+    },
+    {
+      id: 'ACT-003',
+      title: 'User Testing',
+      phase: 'Validation',
+      status: 'in-progress',
+      progress: 60,
+      dueDate: '2025-04-15'
+    },
+    {
+      id: 'ACT-004',
+      title: 'Launch Strategy',
+      phase: 'Launch',
+      status: 'pending',
+      progress: 0,
+      dueDate: '2025-05-15'
+    },
+    {
+      id: 'ACT-005',
+      title: 'Marketing Campaign',
+      phase: 'Launch',
+      status: 'pending',
+      progress: 0,
+      dueDate: '2025-05-31'
+    },
+    {
+      id: 'ACT-006',
+      title: 'User Acquisition',
+      phase: 'Growth',
+      status: 'pending',
+      progress: 0,
+      dueDate: '2025-07-31'
+    }
+  ];
 
-          // Calculate KPI data
-          const kpiData = useMemo(() => {
-            const allActivities = founderActivities.phases.flatMap(phase => phase.activities);
-            const today = new Date();
-            
-            const overdueTasks = allActivities.filter(activity => 
-              new Date(activity.dueDate) < today && activity.status !== 'completed'
-            ).length;
-            
-            const highPriorityTasks = allActivities.filter(activity => 
-              activity.priority === 'high' && activity.status !== 'completed'
-            ).length;
-            
-            const upcomingMilestones = founderActivities.milestones.filter(milestone => {
-              const targetDate = new Date(milestone.targetDate);
-              const daysFromNow = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
-              return daysFromNow <= 30 && daysFromNow > 0;
-            }).length;
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'bg-success';
+      case 'in-progress': return 'bg-primary-500';
+      case 'pending': return 'bg-warning';
+      default: return 'bg-gray-300';
+    }
+  };
 
-            return {
-              overdueTasks,
-              highPriorityTasks,
-              upcomingMilestones
-            };
-          }, [founderActivities]);
+  const getProgressColor = (progress) => {
+    if (progress >= 80) return 'bg-success';
+    if (progress >= 60) return 'bg-primary-500';
+    if (progress >= 40) return 'bg-warning';
+    return 'bg-gray-300';
+  };
 
-          const handleActivityClick = (activity) => {
-            setSelectedActivity(activity);
-            setIsDetailModalOpen(true);
-          };
+  return (
+    <AppLayout>
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-text-primary mb-2">
+              Founder Activity Dashboard
+            </h1>
+            <p className="text-lg text-text-secondary">
+              Track your startup journey from ideation to scaling
+            </p>
+          </div>
+          
+          <Button variant="primary" icon="Download">
+            Export PDF
+          </Button>
+        </div>
 
-          const handleExportToPDF = () => {
-            // Mock PDF export functionality
-            console.log('Exporting to PDF...');
-            // In a real implementation, you would use a library like jsPDF or react-pdf
-          };
-
-          const renderTabContent = () => {
-            switch (activeTab) {
-              case 'roadmap':
-                return <RoadmapTimeline activities={founderActivities} onActivityClick={handleActivityClick} />;
-              case 'matrix':
-                return <ActivityMatrix activities={founderActivities} onActivityClick={handleActivityClick} />;
-              case 'milestones':
-                return <MilestoneTracker milestones={founderActivities.milestones} />;
-              default:
-                return <RoadmapTimeline activities={founderActivities} onActivityClick={handleActivityClick} />;
-            }
-          };
-
-          return (
-            <div className="min-h-screen bg-gradient-dark">
-              <Helmet>
-                <title>Founder Activity Dashboard - Track Your Startup Journey</title>
-                <meta name="description" content="Comprehensive founder activity tracking from ideation to scaling with timeline, matrix, and milestone views" />
-              </Helmet>
-
-              <div className="container mx-auto px-4 py-8 max-w-7xl">
-                {/* Header Section */}
-                <div className="mb-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h1 className="text-4xl font-bold text-text-dark-primary mb-2">
-                        Founder Activity Dashboard
-                      </h1>
-                      <p className="text-text-dark-secondary text-lg">
-                        Track your startup journey from ideation to scaling
-                      </p>
-                    </div>
-                    <Button
-                      variant="accent"
-                      icon="Download"
-                      onClick={handleExportToPDF}
-                      className="hover:shadow-glow-neon"
-                    >
-                      Export PDF
-                    </Button>
-                  </div>
-
-                  <ProgressHeader progress={overallProgress} />
-                </div>
-
-                {/* KPI Widgets */}
-                <KPIWidgets data={kpiData} />
-
-                {/* Tab Navigation */}
-                <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-
-                {/* Tab Content */}
-                <div className="mt-8">
-                  {renderTabContent()}
-                </div>
-
-                {/* Activity Detail Modal */}
-                <ActivityDetailModal
-                  activity={selectedActivity}
-                  isOpen={isDetailModalOpen}
-                  onClose={() => setIsDetailModalOpen(false)}
-                />
+        {/* Progress Overview */}
+        <div className="bg-gradient-card p-8 rounded-2xl shadow-soft border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center shadow-card">
+                <Icon name="TrendingUp" size={32} className="text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-text-primary">Overall Progress</h2>
+                <p className="text-text-secondary">Startup journey completion</p>
               </div>
             </div>
-          );
-        };
+            
+            <div className="text-right">
+              <div className="text-4xl font-bold text-primary-600 mb-1">39%</div>
+              <div className="text-sm text-success">Keep Going!</div>
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-primary rounded-full transition-all duration-500"
+                style={{ width: '39%' }}
+              ></div>
+            </div>
+          </div>
+          
+          {/* Phase Indicators */}
+          <div className="flex items-center justify-between text-sm">
+            {[
+              { name: "Ideation", completed: true },
+              { name: "Validation", completed: false },
+              { name: "Launch", completed: false },
+              { name: "Growth", completed: false },
+              { name: "Scaling", completed: false }
+            ].map((phase, index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <Icon 
+                  name={phase.completed ? "CheckCircle" : "Circle"} 
+                  size={16} 
+                  className={phase.completed ? "text-success" : "text-text-muted"} 
+                />
+                <span className={phase.completed ? "text-text-primary" : "text-text-muted"}>
+                  {phase.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        export default FounderActivityDashboard;
+        {/* KPI Widgets */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-gradient-card p-6 rounded-2xl shadow-soft border border-gray-100 hover:shadow-soft-lg transition-all duration-300">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-error rounded-xl flex items-center justify-center shadow-card">
+                <Icon name="AlertTriangle" size={24} className="text-white" />
+              </div>
+              <Icon name="ArrowRight" size={16} className="text-text-muted" />
+            </div>
+            
+            <div>
+              <div className="text-3xl font-bold text-text-primary mb-1">6</div>
+              <div className="text-sm font-medium text-text-primary mb-1">Overdue Tasks</div>
+              <div className="text-xs text-text-muted">Tasks past due date</div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-card p-6 rounded-2xl shadow-soft border border-gray-100 hover:shadow-soft-lg transition-all duration-300">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-warning rounded-xl flex items-center justify-center shadow-card">
+                <Icon name="Star" size={24} className="text-white" />
+              </div>
+              <Icon name="ArrowRight" size={16} className="text-text-muted" />
+            </div>
+            
+            <div>
+              <div className="text-3xl font-bold text-text-primary mb-1">9</div>
+              <div className="text-sm font-medium text-text-primary mb-1">High Priorities</div>
+              <div className="text-xs text-text-muted">Critical tasks pending</div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-card p-6 rounded-2xl shadow-soft border border-gray-100 hover:shadow-soft-lg transition-all duration-300">
+            <div className="flex items-center justify-between mb-4">
+              <div className="w-12 h-12 bg-gradient-success rounded-xl flex items-center justify-center shadow-card">
+                <Icon name="Target" size={24} className="text-white" />
+              </div>
+              <Icon name="ArrowRight" size={16} className="text-text-muted" />
+            </div>
+            
+            <div>
+              <div className="text-3xl font-bold text-text-primary mb-1">1</div>
+              <div className="text-sm font-medium text-text-primary mb-1">Upcoming Milestones</div>
+              <div className="text-xs text-text-muted">Due within 30 days</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="bg-gradient-card rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
+          <div className="border-b border-gray-200">
+            <div className="flex">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+                    flex items-center space-x-2 px-6 py-4 text-sm font-medium transition-all duration-200
+                    ${activeTab === tab.id
+                      ? 'bg-gradient-primary text-white shadow-soft border-b-2 border-transparent'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-gray-50'
+                    }
+                  `}
+                >
+                  <span>{tab.label}</span>
+                  <span className={`
+                    px-2 py-0.5 rounded-lg text-xs font-medium
+                    ${activeTab === tab.id
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-text-muted'
+                    }
+                  `}>
+                    {tab.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="p-8">
+            {activeTab === 'overview' && (
+              <div className="space-y-4">
+                {activities.map((activity) => (
+                  <div key={activity.id} className="bg-white p-6 rounded-xl shadow-soft border border-gray-100 hover:shadow-soft-lg transition-all duration-300">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className={`w-8 h-8 rounded-lg ${getStatusColor(activity.status)}`}></div>
+                        <div>
+                          <h3 className="font-semibold text-text-primary">{activity.title}</h3>
+                          <p className="text-sm text-text-muted">{activity.phase} • Due {activity.dueDate}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-text-primary">{activity.progress}%</div>
+                        <div className="text-xs text-text-muted">Complete</div>
+                      </div>
+                    </div>
+                    
+                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full ${getProgressColor(activity.progress)} rounded-full transition-all duration-500`}
+                        style={{ width: `${activity.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {activeTab === 'timeline' && (
+              <div className="text-center py-12">
+                <Icon name="Calendar" size={48} className="text-text-muted mb-4 mx-auto" />
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Roadmap Timeline</h3>
+                <p className="text-text-secondary">Interactive timeline view coming soon</p>
+              </div>
+            )}
+            
+            {activeTab === 'tracker' && (
+              <div className="text-center py-12">
+                <Icon name="Flag" size={48} className="text-text-muted mb-4 mx-auto" />
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Milestone Tracker</h3>
+                <p className="text-text-secondary">Track key milestones and achievements</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </AppLayout>
+  );
+};
+
+export default FounderActivityDashboard;

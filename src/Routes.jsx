@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import ErrorBoundary from "./components/ErrorBoundary";
-import ComplianceDashboardOverview from "./pages/compliance-dashboard-overview";
+import FounderProDashboard from "./pages/compliance-dashboard-overview";
 import ControlsMatrixManagement from "./pages/controls-matrix-management";
 import AuditTimelineScheduler from "./pages/audit-timeline-scheduler";
 import PolicyLibraryManagement from "./pages/policy-library-management";
@@ -32,8 +32,9 @@ const Routes = () => {
       <ErrorBoundary>
         <ScrollToTop />
         <RouterRoutes>
-          <Route path="/" element={<ComplianceDashboardOverview />} />
-          <Route path="/compliance-dashboard-overview" element={<ComplianceDashboardOverview />} />
+          <Route path="/" element={<FounderProDashboard />} />
+          <Route path="/founder-pro-dashboard" element={<FounderProDashboard />} />
+          <Route path="/compliance-dashboard-overview" element={<FounderProDashboard />} />
           <Route path="/controls-matrix-management" element={<ControlsMatrixManagement />} />
           <Route path="/audit-timeline-scheduler" element={<AuditTimelineScheduler />} />
           <Route path="/policy-library-management" element={<PolicyLibraryManagement />} />

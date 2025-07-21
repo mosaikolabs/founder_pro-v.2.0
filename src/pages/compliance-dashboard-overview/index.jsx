@@ -1,214 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from '../../components/ui/Sidebar';
-import Breadcrumbs from '../../components/ui/Breadcrumbs';
-import ControlDetailDrawer from '../../components/ui/ControlDetailDrawer';
-import ComplianceStatusBanner from './components/ComplianceStatusBanner';
+import React, { useState } from 'react';
+import AppLayout from '../../components/layout/AppLayout';
 import KPIWidgets from './components/KPIWidgets';
-import TabNavigation from './components/TabNavigation';
-import ControlsMatrix from './components/ControlsMatrix';
-import PolicyLibrary from './components/PolicyLibrary';
-import AuditTimeline from './components/AuditTimeline';
-import ExportModal from './components/ExportModal';
+import StrategicMatrix from './components/StrategicMatrix';
+import Button from '../../components/ui/Button';
 import Icon from '../../components/AppIcon';
 
-const ComplianceDashboardOverview = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('controls-matrix');
-  const [isControlDrawerOpen, setIsControlDrawerOpen] = useState(false);
-  const [selectedControl, setSelectedControl] = useState(null);
-  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [complianceData, setComplianceData] = useState({
-    overallCompliance: 87,
-    openControls: 23,
-    expiredPolicies: 5,
-    upcomingAudits: 8
-  });
-
-  // Mock real-time data updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setComplianceData(prev => ({
-        ...prev,
-        overallCompliance: Math.max(75, Math.min(95, prev.overallCompliance + (Math.random() - 0.5) * 2))
-      }));
-    }, 30000); // Update every 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSidebarToggle = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleControlClick = (controlData) => {
-    setSelectedControl(controlData);
-    setIsControlDrawerOpen(true);
-  };
-
-  const handleExport = () => {
-    setIsExportModalOpen(true);
-  };
-
-  const handleKeyboardShortcuts = (e) => {
-    if (e.ctrlKey && e.key === 'e') {
-      e.preventDefault();
-      handleExport();
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyboardShortcuts);
-    return () => document.removeEventListener('keydown', handleKeyboardShortcuts);
-  }, []);
+const FounderDashboard = () => {
+  const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
-    {
-      id: 'controls-matrix',
-      label: 'Controls Matrix',
-      icon: 'Grid3X3',
-      count: complianceData.openControls
-    },
-    {
-      id: 'policy-library',
-      label: 'Policy Library',
-      icon: 'BookOpen',
-      count: complianceData.expiredPolicies
-    },
-    {
-      id: 'audit-timeline',
-      label: 'Audit Timeline',
-      icon: 'Calendar',
-      count: complianceData.upcomingAudits
-    }
+    { id: 'overview', label: 'Strategic Overview', count: 11 },
+    { id: 'resources', label: 'Founder Resources', count: 5 },
+    { id: 'timeline', label: 'Milestone Timeline', count: 8 }
   ];
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'controls-matrix':
-        return <ControlsMatrix onControlClick={handleControlClick} />;
-      case 'policy-library':
-        return <PolicyLibrary />;
-      case 'audit-timeline':
-        return <AuditTimeline />;
-      default:
-        return <ControlsMatrix onControlClick={handleControlClick} />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-dark dark-theme">
-      {/* Sidebar */}
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
-      />
+    <AppLayout>
+      <div className="space-y-8">
+        {/* Header Section */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-text-primary mb-2">
+              Founder Pro Dashboard
+            </h1>
+            <p className="text-lg text-text-secondary">
+              Your comprehensive platform to guide your startup from idea to launch and beyond
+            </p>
+          </div>
+          
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" icon="RefreshCcw">
+              Refresh
+            </Button>
+            <Button variant="primary" icon="Download">
+              Export Report
+            </Button>
+          </div>
+        </div>
 
-      {/* Main Content */}
-      <div className="lg:ml-sidebar">
-        {/* Page Content */}
-        <main>
-          {/* Compliance Status Banner */}
-          <ComplianceStatusBanner 
-            compliancePercentage={complianceData.overallCompliance}
-            onExport={handleExport}
-          />
-
-          <div className="p-4 lg:p-6">
-            {/* Breadcrumbs */}
-            <Breadcrumbs />
-
-            {/* Page Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-              <div>
-                <h1 className="text-2xl lg:text-3xl font-semibold text-text-dark-primary mb-2">
-                  Compliance Dashboard
-                </h1>
-                <p className="text-text-dark-secondary">
-                  Monitor organizational compliance status and manage controls across departments
-                </p>
+        {/* Founder Score Card */}
+        <div className="bg-gradient-card p-8 rounded-2xl shadow-soft border border-gray-100">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-6">
+              <div className="relative">
+                {/* Circular Progress */}
+                <div className="w-24 h-24 rounded-full bg-gradient-primary flex items-center justify-center shadow-soft">
+                  <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center">
+                    <span className="text-2xl font-bold text-primary-600">72%</span>
+                  </div>
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-success rounded-full flex items-center justify-center shadow-card">
+                  <Icon name="TrendingUp" size={16} className="text-white" />
+                </div>
               </div>
               
-              {/* Quick Actions */}
-              <div className="flex items-center space-x-3 mt-4 lg:mt-0">
+              <div>
+                <h3 className="text-2xl font-bold text-text-primary mb-1">Founder Score™</h3>
+                <p className="text-text-secondary mb-2">Your startup maturity and strategic readiness score</p>
+                <div className="flex items-center space-x-4 text-sm">
+                  <span className="text-success font-medium">📈 On Track</span>
+                  <span className="text-text-muted">Last updated: 2 hours ago</span>
+                  <span className="text-text-muted">11 AC modules active</span>
+                </div>
+              </div>
+            </div>
+            
+            <Button variant="outline" size="sm">
+              View Analysis
+            </Button>
+          </div>
+        </div>
+
+        {/* KPI Widgets */}
+        <KPIWidgets />
+
+        {/* Tab Navigation */}
+        <div className="bg-gradient-card rounded-2xl shadow-soft border border-gray-100 overflow-hidden">
+          <div className="border-b border-gray-200">
+            <div className="flex">
+              {tabs.map((tab) => (
                 <button
-                  onClick={handleExport}
-                  className="btn-primary-dark inline-flex items-center space-x-2"
-                  title="Export Dashboard (Ctrl+E)"
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+                    flex items-center space-x-2 px-6 py-4 text-sm font-medium transition-all duration-200
+                    ${activeTab === tab.id
+                      ? 'bg-gradient-primary text-white shadow-soft border-b-2 border-transparent'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-gray-50'
+                    }
+                  `}
                 >
-                  <Icon name="Download" size={16} />
-                  <span>Export PDF</span>
+                  <span>{tab.label}</span>
+                  <span className={`
+                    px-2 py-0.5 rounded-lg text-xs font-medium
+                    ${activeTab === tab.id
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-text-muted'
+                    }
+                  `}>
+                    {tab.count}
+                  </span>
                 </button>
-                
-                <button className="btn-secondary-dark inline-flex items-center space-x-2">
-                  <Icon name="RefreshCw" size={16} />
-                  <span className="hidden sm:inline">Refresh</span>
-                </button>
-              </div>
-            </div>
-
-            {/* KPI Widgets */}
-            <KPIWidgets 
-              openControls={complianceData.openControls}
-              expiredPolicies={complianceData.expiredPolicies}
-              upcomingAudits={complianceData.upcomingAudits}
-            />
-
-            {/* Tab Navigation */}
-            <TabNavigation 
-              tabs={tabs}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-
-            {/* Tab Content */}
-            <div className="neumorphic-card">
-              {renderTabContent()}
-            </div>
-
-            {/* Integration Status */}
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="neumorphic-card p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-green-400 rounded-full neon-glow-green"></div>
-                  <span className="text-sm text-text-dark-secondary">ERP Integration</span>
-                  <span className="text-xs text-green-400 font-medium">Connected</span>
-                </div>
-              </div>
-              <div className="neumorphic-card p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-green-400 rounded-full neon-glow-green"></div>
-                  <span className="text-sm text-text-dark-secondary">LDAP Sync</span>
-                  <span className="text-xs text-green-400 font-medium">Active</span>
-                </div>
-              </div>
-              <div className="neumorphic-card p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                  <span className="text-sm text-text-dark-secondary">Document Management</span>
-                  <span className="text-xs text-yellow-400 font-medium">Syncing</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-        </main>
+          
+          <div className="p-8">
+            {activeTab === 'overview' && <StrategicMatrix />}
+            {activeTab === 'resources' && (
+              <div className="text-center py-12">
+                <Icon name="BookOpen" size={48} className="text-text-muted mb-4 mx-auto" />
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Founder Resources</h3>
+                <p className="text-text-secondary">Access curated resources and guides for your startup journey.</p>
+              </div>
+            )}
+            {activeTab === 'timeline' && (
+              <div className="text-center py-12">
+                <Icon name="Calendar" size={48} className="text-text-muted mb-4 mx-auto" />
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Milestone Timeline</h3>
+                <p className="text-text-secondary">Track your startup milestones and key achievements.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-gradient-card p-6 rounded-2xl shadow-soft border border-gray-100 hover:shadow-soft-lg transition-all duration-300 cursor-pointer group">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Icon name="Target" size={24} className="text-white" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-text-primary">Strategic Planning</h4>
+                <p className="text-sm text-text-secondary">Review and update core strategy</p>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-xs text-success bg-success/10 px-2 py-1 rounded-lg">Active</span>
+              <Icon name="ArrowRight" size={16} className="text-text-muted group-hover:text-primary-500 transition-colors" />
+            </div>
+          </div>
+
+          <div className="bg-gradient-card p-6 rounded-2xl shadow-soft border border-gray-100 hover:shadow-soft-lg transition-all duration-300 cursor-pointer group">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-secondary rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Icon name="Search" size={24} className="text-white" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-text-primary">Market Research</h4>
+                <p className="text-sm text-text-secondary">Validate market assumptions</p>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-xs text-info bg-info/10 px-2 py-1 rounded-lg">Connected</span>
+              <Icon name="ArrowRight" size={16} className="text-text-muted group-hover:text-primary-500 transition-colors" />
+            </div>
+          </div>
+
+          <div className="bg-gradient-card p-6 rounded-2xl shadow-soft border border-gray-100 hover:shadow-soft-lg transition-all duration-300 cursor-pointer group">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-warning rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Icon name="DollarSign" size={24} className="text-white" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-text-primary">Funding Pipeline</h4>
+                <p className="text-sm text-text-secondary">Prepare for next funding round</p>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-xs text-warning bg-warning/10 px-2 py-1 rounded-lg">In Progress</span>
+              <Icon name="ArrowRight" size={16} className="text-text-muted group-hover:text-primary-500 transition-colors" />
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Control Detail Drawer */}
-      <ControlDetailDrawer
-        isOpen={isControlDrawerOpen}
-        onClose={() => setIsControlDrawerOpen(false)}
-        controlData={selectedControl}
-      />
-
-      {/* Export Modal */}
-      <ExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        activeTab={activeTab}
-        complianceData={complianceData}
-      />
-    </div>
+    </AppLayout>
   );
 };
 
-export default ComplianceDashboardOverview;
+export default FounderDashboard;

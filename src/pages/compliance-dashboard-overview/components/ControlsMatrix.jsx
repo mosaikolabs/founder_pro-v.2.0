@@ -1,258 +1,286 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Icon from '../../../components/AppIcon';
 
-const ControlsMatrix = ({ onControlClick }) => {
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterDepartment, setFilterDepartment] = useState('all');
-
-  // Mock data for controls matrix
-  const departments = [
-    "IT Security", "Finance", "HR", "Operations", "Legal", "Marketing", "Sales", "R&D"
+const StrategicMatrix = ({ onControlClick }) => {
+  const strategicAreas = [
+    {
+      id: "strategy-fundamentals",
+      name: "Strategy & Fundamentals",
+      icon: "Compass",
+      owner: "Founder",
+      description: "Core strategy and business model"
+    },
+    {
+      id: "legal-corporate",
+      name: "Legal & Corporate",
+      icon: "Scale",
+      owner: "Legal Team",
+      description: "Corporate structure and compliance"
+    },
+    {
+      id: "technology-product",
+      name: "Technology & Product",
+      icon: "Code",
+      owner: "CTO/Tech Lead",
+      description: "Product development and tech stack"
+    },
+    {
+      id: "finance-metrics",
+      name: "Finance & Metrics",
+      icon: "BarChart3",
+      owner: "Founder/CFO",
+      description: "Financial planning and KPI tracking"
+    },
+    {
+      id: "marketing-customers",
+      name: "Marketing & Customers",
+      icon: "Target",
+      owner: "Marketing Lead",
+      description: "Customer acquisition and marketing"
+    },
+    {
+      id: "operations-success",
+      name: "Operations & Success",
+      icon: "Settings",
+      owner: "Operations Lead",
+      description: "Operational excellence and customer success"
+    },
+    {
+      id: "investment-fundraising",
+      name: "Investment & Fundraising",
+      icon: "Diamond",
+      owner: "Founder",
+      description: "Investment strategy and fundraising"
+    },
+    {
+      id: "partnership-alliances",
+      name: "Partnerships & Alliances",
+      icon: "Handshake",
+      owner: "Founder",
+      description: "Strategic partnerships and alliances"
+    },
+    {
+      id: "scaling-growth",
+      name: "Scaling & Growth",
+      icon: "TrendingUp",
+      owner: "Founder",
+      description: "Scaling strategies and growth optimization"
+    },
+    {
+      id: "exit-strategy",
+      name: "Exit Strategy",
+      icon: "DoorOpen",
+      owner: "Founder",
+      description: "Exit strategy and succession planning"
+    },
+    {
+      id: "legacy-impact",
+      name: "Legacy & Impact",
+      icon: "Heart",
+      owner: "Founder",
+      description: "Legacy building and impact optimization"
+    }
   ];
 
-  const controls = [
-    "CTRL-001", "CTRL-002", "CTRL-003", "CTRL-004", "CTRL-005", 
-    "CTRL-006", "CTRL-007", "CTRL-008", "CTRL-009", "CTRL-010"
+  const startupPhases = [
+    { id: "ideation", name: "Ideation", status: "completed" },
+    { id: "validation", name: "Validation", status: "in-progress" },
+    { id: "mvp", name: "MVP Build", status: "in-progress" },
+    { id: "launch", name: "Launch", status: "pending" },
+    { id: "growth", name: "Growth", status: "pending" },
+    { id: "scaling", name: "Scaling", status: "pending" }
   ];
 
-  const matrixData = departments.map(dept => {
-    const row = { department: dept };
-    controls.forEach(control => {
-      const statuses = ['Compliant', 'Non-Compliant', 'In Progress', 'Not Tested'];
-      const weights = [0.6, 0.15, 0.2, 0.05]; // Higher probability for compliant
-      const randomValue = Math.random();
-      let cumulativeWeight = 0;
-      let status = statuses[0];
-      
-      for (let i = 0; i < statuses.length; i++) {
-        cumulativeWeight += weights[i];
-        if (randomValue <= cumulativeWeight) {
-          status = statuses[i];
-          break;
-        }
-      }
-      
-      row[control] = {
-        status,
-        owner: `${dept.split(' ')[0]} Team`,
-        lastTestDate: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-        nextTestDate: new Date(Date.now() + Math.random() * 90 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-        evidence: `Evidence for ${control} in ${dept}`
-      };
-    });
-    return row;
-  });
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Compliant':
-        return 'bg-success text-white';
-      case 'Non-Compliant':
-        return 'bg-error text-white';
-      case 'In Progress':
-        return 'bg-warning text-white';
-      case 'Not Tested':
-        return 'bg-secondary-300 text-text-secondary';
-      default:
-        return 'bg-secondary-100 text-text-secondary';
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'Compliant':
-        return 'CheckCircle';
-      case 'Non-Compliant':
-        return 'XCircle';
-      case 'In Progress':
-        return 'Clock';
-      case 'Not Tested':
-        return 'HelpCircle';
-      default:
-        return 'HelpCircle';
-    }
-  };
-
-  const handleCellClick = (department, control, data) => {
-    const controlData = {
-      id: control,
-      title: `${control} - ${department}`,
-      description: `Control implementation for ${department} department`,
-      owner: data.owner,
-      department: department,
-      status: data.status,
-      riskLevel: data.status === 'Non-Compliant' ? 'High' : data.status === 'In Progress' ? 'Medium' : 'Low',
-      lastTestDate: data.lastTestDate,
-      nextTestDate: data.nextTestDate,
-      testFrequency: 'Quarterly',
-      requiredEvidence: [data.evidence],
-      complianceFrameworks: ['SOX', 'ISO 27001'],
-      implementationStatus: data.status === 'Compliant' ? 100 : data.status === 'In Progress' ? 65 : 0
+  const getPhaseIcon = (phaseId) => {
+    const iconMap = {
+      'ideation': 'Lightbulb',
+      'validation': 'Search',
+      'mvp': 'Code',
+      'launch': 'Rocket',
+      'growth': 'TrendingUp',
+      'scaling': 'Zap'
     };
-    onControlClick(controlData);
+    return iconMap[phaseId] || 'Circle';
   };
 
-  const handleSort = (key) => {
-    let direction = 'asc';
-    if (sortConfig.key === key && sortConfig.direction === 'asc') {
-      direction = 'desc';
+  const getPhaseStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'bg-success-dark';
+      case 'in-progress': return 'bg-warning-dark';
+      case 'pending': return 'bg-text-dark-muted';
+      default: return 'bg-text-dark-muted';
     }
-    setSortConfig({ key, direction });
   };
 
-  const filteredData = matrixData.filter(row => {
-    const matchesSearch = row.department.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDepartment = filterDepartment === 'all' || row.department === filterDepartment;
-    return matchesSearch && matchesDepartment;
-  });
+  const getAreaIcon = (areaId) => {
+    const iconMap = {
+      'strategy-fundamentals': 'Compass',
+      'legal-corporate': 'Scale',
+      'technology-product': 'Code',
+      'finance-metrics': 'BarChart3',
+      'marketing-customers': 'Target',
+      'operations-success': 'Settings',
+      'investment-fundraising': 'Diamond',
+      'partnership-alliances': 'Handshake',
+      'scaling-growth': 'TrendingUp',
+      'exit-strategy': 'DoorOpen',
+      'legacy-impact': 'Heart'
+    };
+    return iconMap[areaId] || 'Circle';
+  };
 
-  const sortedData = [...filteredData].sort((a, b) => {
-    if (!sortConfig.key) return 0;
-    
-    const aValue = a[sortConfig.key];
-    const bValue = b[sortConfig.key];
-    
-    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
-    return 0;
-  });
+  const handleCellClick = (area, phase) => {
+    if (onControlClick) {
+      onControlClick({
+        id: `${area.id}-${phase.id}`,
+        name: `${area.name} - ${phase.name}`,
+        area: area.name,
+        phase: phase.name,
+        status: phase.status,
+        owner: area.owner,
+        description: area.description
+      });
+    }
+  };
 
   return (
-    <div className="p-6">
-      {/* Header and Filters */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 space-y-4 lg:space-y-0">
-        <div>
-          <h3 className="text-lg font-semibold text-text-dark-primary">
-            Controls Matrix
-          </h3>
-          <p className="text-sm text-text-dark-secondary mt-1">
-            Interactive grid showing control status across departments
-          </p>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-          {/* Search */}
-          <div className="relative">
-            <Icon name="Search" size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-dark-muted" />
-            <input
-              type="text"
-              placeholder="Search departments..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-dark-surface border border-white/10 rounded-neumorphic text-sm text-text-dark-primary placeholder-text-dark-muted shadow-neumorphic-inset focus:outline-none focus:ring-2 focus:ring-neon-green focus:border-neon-green nav-transition"
-            />
-          </div>
-          
-          {/* Department Filter */}
-          <select
-            value={filterDepartment}
-            onChange={(e) => setFilterDepartment(e.target.value)}
-            className="px-4 py-2 bg-dark-surface border border-white/10 rounded-neumorphic text-sm text-text-dark-primary shadow-neumorphic-inset focus:outline-none focus:ring-2 focus:ring-neon-green focus:border-neon-green nav-transition"
-          >
-            <option value="all">All Departments</option>
-            {departments.map(dept => (
-              <option key={dept} value={dept}>{dept}</option>
-            ))}
-          </select>
-        </div>
-      </div>
+    <div className="bg-gradient-card rounded-neumorphic-lg p-6 shadow-neumorphic border border-slate-600">
+      <h3 className="text-2xl font-bold text-text-dark-primary mb-6 flex items-center">
+        <Icon name="Grid3X3" size={24} className="mr-3 text-neon-green" />
+        Strategic Areas Matrix
+      </h3>
+      <p className="text-text-dark-secondary mb-6">
+        Track progress across strategic areas and startup phases. Click any cell to view detailed information.
+      </p>
 
-      {/* Matrix Table */}
-      <div className="overflow-x-auto neumorphic-card">
-        <div className="table-dark">
-          <table className="w-full">
-            <thead>
-              <tr>
-                <th className="sticky left-0 bg-gradient-to-r from-dark-secondary to-dark-surface px-4 py-3 text-left border-r border-white/10">
-                  <button
-                    onClick={() => handleSort('department')}
-                    className="flex items-center space-x-1 text-sm font-medium text-text-dark-secondary hover:text-neon-green nav-transition"
+      {/* Matrix Grid */}
+      <div className="overflow-x-auto">
+        <div className="min-w-max">
+          {/* Header Row */}
+          <div className="grid grid-cols-12 gap-2 mb-4">
+            <div className="w-32"></div> {/* Empty corner */}
+            {startupPhases.map((phase) => (
+              <div key={phase.id} className="text-center">
+                <div className="flex flex-col items-center space-y-2">
+                  <div className={`
+                    w-8 h-8 rounded-full flex items-center justify-center
+                    ${getPhaseStatusColor(phase.status)}
+                  `}>
+                    <Icon name={getPhaseIcon(phase.id)} size={16} className="text-white" />
+                  </div>
+                  <div className="text-xs font-medium text-text-dark-primary">
+                    {phase.name}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Matrix Rows */}
+          {strategicAreas.map((area) => (
+            <div key={area.id} className="grid grid-cols-12 gap-2 mb-3">
+              {/* Area Name */}
+              <div className="w-32 flex items-center space-x-2">
+                <Icon name={getAreaIcon(area.id)} size={16} className="text-neon-green" />
+                <div>
+                  <div className="text-sm font-medium text-text-dark-primary">
+                    {area.name}
+                  </div>
+                  <div className="text-xs text-text-dark-secondary">
+                    {area.owner}
+                  </div>
+                </div>
+              </div>
+
+              {/* Matrix Cells */}
+              {startupPhases.map((phase) => {
+                const isCompleted = phase.status === 'completed';
+                const isInProgress = phase.status === 'in-progress';
+                const isPending = phase.status === 'pending';
+                
+                return (
+                  <div
+                    key={`${area.id}-${phase.id}`}
+                    className={`
+                      w-16 h-16 rounded-lg border-2 cursor-pointer transition-all duration-200
+                      ${isCompleted 
+                        ? 'bg-success-dark bg-opacity-20 border-success-dark hover:bg-success-dark hover:bg-opacity-30' 
+                        : isInProgress 
+                        ? 'bg-warning-dark bg-opacity-20 border-warning-dark hover:bg-warning-dark hover:bg-opacity-30'
+                        : 'bg-dark-secondary border-slate-600 hover:bg-slate-600 hover:border-slate-500'
+                      }
+                      hover:scale-105 hover:shadow-neumorphic-hover
+                    `}
+                    onClick={() => handleCellClick(area, phase)}
+                    title={`${area.name} - ${phase.name} (${phase.status})`}
                   >
-                    <span>Department</span>
-                    <Icon 
-                      name={sortConfig.key === 'department' && sortConfig.direction === 'desc' ? 'ChevronDown' : 'ChevronUp'} 
-                      size={14} 
-                    />
-                  </button>
-                </th>
-                {controls.map(control => (
-                  <th key={control} className="px-3 py-3 text-center min-w-[100px]">
-                    <span className="text-sm font-medium text-text-dark-secondary">
-                      {control}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {sortedData.map((row, rowIndex) => (
-                <tr key={rowIndex} className="hover:bg-white/5 nav-transition">
-                  <td className="sticky left-0 bg-gradient-to-r from-dark-secondary to-dark-surface px-4 py-3 font-medium text-text-dark-primary border-r border-white/10">
-                    {row.department}
-                  </td>
-                  {controls.map(control => {
-                    const cellData = row[control];
-                    return (
-                      <td key={control} className="px-3 py-3 text-center">
-                        <button
-                          onClick={() => handleCellClick(row.department, control, cellData)}
-                          className={`
-                            w-8 h-8 rounded-full flex items-center justify-center nav-transition hover-scale
-                            ${getStatusColor(cellData.status)}
-                          `}
-                          title={`${control} - ${cellData.status}
-Click for details`}
-                        >
-                          <Icon 
-                            name={getStatusIcon(cellData.status)} 
-                            size={14} 
-                          />
-                        </button>
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <div className="w-full h-full flex items-center justify-center">
+                      {isCompleted && (
+                        <Icon name="Check" size={20} className="text-success-dark" />
+                      )}
+                      {isInProgress && (
+                        <Icon name="Clock" size={20} className="text-warning-dark" />
+                      )}
+                      {isPending && (
+                        <Icon name="Circle" size={20} className="text-text-dark-muted" />
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Legend */}
-      <div className="mt-6 flex flex-wrap items-center space-x-6">
-        <span className="text-sm font-medium text-text-dark-secondary">Legend:</span>
-        {[
-          { status: 'Compliant', icon: 'CheckCircle' },
-          { status: 'Non-Compliant', icon: 'XCircle' },
-          { status: 'In Progress', icon: 'Clock' },
-          { status: 'Not Tested', icon: 'HelpCircle' }
-        ].map(item => (
-          <div key={item.status} className="flex items-center space-x-2">
-            <div className={`w-6 h-6 rounded-full flex items-center justify-center ${getStatusColor(item.status)}`}>
-              <Icon name={item.icon} size={12} />
-            </div>
-            <span className="text-sm text-text-dark-secondary">{item.status}</span>
-          </div>
-        ))}
+      <div className="mt-6 flex flex-wrap items-center space-x-6 text-sm">
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 bg-success-dark rounded"></div>
+          <span className="text-text-dark-secondary">Completed</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 bg-warning-dark rounded"></div>
+          <span className="text-text-dark-secondary">In Progress</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 bg-text-dark-muted rounded"></div>
+          <span className="text-text-dark-secondary">Pending</span>
+        </div>
       </div>
 
-      {/* Summary Stats */}
-      <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Total Controls', value: departments.length * controls.length },
-          { label: 'Compliant', value: Math.round(departments.length * controls.length * 0.6) },
-          { label: 'Non-Compliant', value: Math.round(departments.length * controls.length * 0.15) },
-          { label: 'In Progress', value: Math.round(departments.length * controls.length * 0.2) }
-        ].map(stat => (
-          <div key={stat.label} className="neumorphic-card p-4 text-center">
-            <div className="text-2xl font-bold text-text-dark-primary">{stat.value}</div>
-            <div className="text-sm text-text-dark-secondary">{stat.label}</div>
+      {/* Strategic Areas Quick Stats */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="neumorphic-card p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-2xl font-bold text-neon-green">11</div>
+              <div className="text-sm text-text-dark-secondary">Strategic Areas</div>
+            </div>
+            <Icon name="Target" size={24} className="text-neon-green" />
           </div>
-        ))}
+        </div>
+        <div className="neumorphic-card p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-2xl font-bold text-warning-dark">6</div>
+              <div className="text-sm text-text-dark-secondary">Startup Phases</div>
+            </div>
+            <Icon name="TrendingUp" size={24} className="text-warning-dark" />
+          </div>
+        </div>
+        <div className="neumorphic-card p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-2xl font-bold text-neon-purple">66</div>
+              <div className="text-sm text-text-dark-secondary">Total Checkpoints</div>
+            </div>
+            <Icon name="Grid3X3" size={24} className="text-neon-purple" />
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default ControlsMatrix;
+export default StrategicMatrix;

@@ -1,21 +1,21 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 
-const ComplianceStatusBanner = ({ compliancePercentage = 87, onExport }) => {
-  const getComplianceColor = (percentage) => {
-    if (percentage >= 90) return 'success';
-    if (percentage >= 75) return 'warning';
+const FounderProStatusBanner = ({ compliancePercentage = 72, onExport }) => {
+  const getFounderScoreColor = (percentage) => {
+    if (percentage >= 85) return 'success';
+    if (percentage >= 70) return 'warning';
     return 'error';
   };
 
-  const getComplianceStatus = (percentage) => {
-    if (percentage >= 90) return 'Excellent';
-    if (percentage >= 75) return 'Good';
-    return 'Needs Attention';
+  const getFounderScoreStatus = (percentage) => {
+    if (percentage >= 85) return 'Excellence';
+    if (percentage >= 70) return 'On Track';
+    return 'Needs Focus';
   };
 
-  const complianceColor = getComplianceColor(compliancePercentage);
-  const complianceStatus = getComplianceStatus(compliancePercentage);
+  const founderScoreColor = getFounderScoreColor(compliancePercentage);
+  const founderScoreStatus = getFounderScoreStatus(compliancePercentage);
 
   return (
     <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #312E81 100%)' }}>
@@ -29,7 +29,7 @@ const ComplianceStatusBanner = ({ compliancePercentage = 87, onExport }) => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-6 lg:space-y-0">
             
-            {/* Left Side - Compliance Status */}
+            {/* Left Side - Founder Score */}
             <div className="flex items-center space-x-6">
               {/* Circular Progress */}
               <div className="relative">
@@ -73,18 +73,18 @@ const ComplianceStatusBanner = ({ compliancePercentage = 87, onExport }) => {
               <div className="space-y-2">
                 <div className="flex items-center space-x-3">
                   <h1 className="text-2xl lg:text-3xl font-bold text-text-dark-primary">
-                    Compliance Status
+                    🚀 Founder Score™
                   </h1>
                   <div className={`
                     px-3 py-1 rounded-full text-sm font-bold
-                    ${complianceColor === 'success' ? 'bg-success-dark bg-opacity-20 text-success-dark' : 
-                      complianceColor === 'warning'? 'bg-warning-dark bg-opacity-20 text-warning-dark' : 'bg-error-dark bg-opacity-20 text-error-dark'}
+                    ${founderScoreColor === 'success' ? 'bg-success-dark bg-opacity-20 text-success-dark' : 
+                      founderScoreColor === 'warning'? 'bg-warning-dark bg-opacity-20 text-warning-dark' : 'bg-error-dark bg-opacity-20 text-error-dark'}
                   `}>
-                    {complianceStatus}
+                    {founderScoreStatus}
                   </div>
                 </div>
                 <p className="text-text-dark-secondary text-lg">
-                  Overall organizational compliance rating
+                  Your startup maturity and strategic readiness score
                 </p>
                 <div className="flex items-center space-x-4 text-sm text-text-dark-muted">
                   <div className="flex items-center space-x-1">
@@ -92,74 +92,48 @@ const ComplianceStatusBanner = ({ compliancePercentage = 87, onExport }) => {
                     <span>Last updated: 2 hours ago</span>
                   </div>
                   <div className="flex items-center space-x-1">
-                    <Icon name="Users" size={14} />
-                    <span>245 controls tracked</span>
+                    <Icon name="Zap" size={14} />
+                    <span>11 AC modules active</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Side - Quick Stats */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-4 lg:space-y-0 lg:space-x-8">
-              {/* Quick Stats */}
-              <div className="grid grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-success-dark">
-                    23
-                  </div>
-                  <div className="text-xs text-text-dark-secondary uppercase tracking-wider">
-                    Active Controls
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-warning-dark">
-                    5
-                  </div>
-                  <div className="text-xs text-text-dark-secondary uppercase tracking-wider">
-                    Pending Reviews
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-error-dark">
-                    2
-                  </div>
-                  <div className="text-xs text-text-dark-secondary uppercase tracking-wider">
-                    Critical Issues
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center space-x-3">
-                <button 
-                  onClick={onExport}
-                  className="btn-primary-dark flex items-center space-x-2"
-                >
-                  <Icon name="Download" size={16} />
-                  <span>Export Report</span>
-                </button>
-                <button className="btn-secondary-dark flex items-center space-x-2">
-                  <Icon name="RefreshCw" size={16} />
-                  <span>Refresh</span>
-                </button>
-              </div>
+            {/* Right Side - Quick Actions */}
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={onExport}
+                className="btn-primary-dark inline-flex items-center space-x-2"
+                title="Export Founder Pro Report"
+              >
+                <Icon name="Download" size={16} />
+                <span className="hidden sm:inline">Export Report</span>
+              </button>
+              
+              <button className="btn-secondary-dark inline-flex items-center space-x-2">
+                <Icon name="RefreshCw" size={16} />
+                <span className="hidden sm:inline">Refresh</span>
+              </button>
             </div>
           </div>
 
-          {/* Bottom Progress Bar */}
-          <div className="mt-6 space-y-2">
-            <div className="flex justify-between text-sm text-text-dark-secondary">
-              <span>Compliance Progress</span>
-              <span>{compliancePercentage}% Complete</span>
+          {/* Bottom Stats */}
+          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-neon-green">11</div>
+              <div className="text-sm text-text-dark-secondary">Active Modules</div>
             </div>
-            <div className="progress-bar-dark h-2 rounded-full overflow-hidden">
-              <div 
-                className={`h-full transition-all duration-1000 ease-out ${
-                  complianceColor === 'success' ? 'progress-fill-success' : 
-                  complianceColor === 'warning'? 'progress-fill-warning' : 'progress-fill-error'
-                }`}
-                style={{ width: `${compliancePercentage}%` }}
-              />
+            <div className="text-center">
+              <div className="text-2xl font-bold text-neon-purple">5</div>
+              <div className="text-sm text-text-dark-secondary">Critical Tasks</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-warning-dark">8</div>
+              <div className="text-sm text-text-dark-secondary">Upcoming Milestones</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-success-dark">14</div>
+              <div className="text-sm text-text-dark-secondary">Runway Months</div>
             </div>
           </div>
         </div>
@@ -168,4 +142,4 @@ const ComplianceStatusBanner = ({ compliancePercentage = 87, onExport }) => {
   );
 };
 
-export default ComplianceStatusBanner;
+export default FounderProStatusBanner;
